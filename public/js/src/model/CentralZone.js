@@ -10,11 +10,11 @@ export class CentralZone {
   }
 
   addCardToLine(lineNumber) {
-    if (isCentralZoneFull()) {
+    if (this.isFull()) {
       throw new Error(`You can't draw at ${lineNumber} because central zone is full`);
     }
 
-    const line = getLine(lineNumber);
+    const line = this.getLine(lineNumber);
     line.draw();
   }
 
@@ -32,6 +32,6 @@ export class CentralZone {
   }
 
   isFull() {
-    return getVisibleCardCount() === 3;
+    return this.getVisibleCardCount() === 3;
   }
 }

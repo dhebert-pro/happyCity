@@ -21,6 +21,17 @@ export class HappyCityGame {
     this.currentPlayerIndex = getRandomNumber(0, playerCount - 1);
   }
 
+  //ACTIONS
+  removeCardFromLine(lineNumber, cardName) {
+    this.centralZone.removeCardFromLine(lineNumber, cardName);
+  }
+
+  addCardToLine(lineNumber) {
+    console.log('Add Card');
+    this.centralZone.addCardToLine(lineNumber);
+  }
+
+  //GET-SET
   getPlayerByIndex(index) {
     return this.players[index];
   }

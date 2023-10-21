@@ -13,7 +13,7 @@ export class Line {
     this.visibleCards.push(card);
   }
 
-  removeVisibleCard() {
+  removeVisibleCard(cardName) {
     const cardFound = removeFirstItemByProperty(this.visibleCards, 'name', cardName);
     if (!cardFound) {
       throw new Error(`Card ${cardName} doesn't exist at line ${this.level}`);
