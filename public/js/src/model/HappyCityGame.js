@@ -9,6 +9,7 @@ export class HappyCityGame {
   constructor(playerCount) {
     this.playerCount = playerCount;
     this.players = [];
+    this.nbTurn = 0;
     for(let playerNum = 0; playerNum < playerCount; playerNum++) {
       this.addPlayer(`Joueur ${playerNum + 1}`);
     }
@@ -27,14 +28,33 @@ export class HappyCityGame {
   }
 
   addCardToLine(lineNumber) {
-    console.log('Add Card');
     this.centralZone.addCardToLine(lineNumber);
   }
 
+  newTurn() {
+    this.nbTurn++;
+    if (this.isGameFinished() || this.nbTurn > 20) {
+      console.log('Fin du jeu');
+    } else {
+      this.earnRevenue();
+    }
+  }
+
+  // OTHER ACTIONS
   earnRevenue() {
     this.players.forEach(player => {
       player.earnRevenue();
     });
+  }
+
+  isGameFinished() {
+    let result = false;
+    this.players.forEach(player => {
+      if (player.isFull()) {
+        result = true;
+      }
+    })
+    return result;
   }
 
   //GET-SET

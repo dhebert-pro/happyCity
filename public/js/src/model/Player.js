@@ -30,9 +30,20 @@ export class Player {
     return [...this.cards.line1, ...this.cards.line2];
   }
 
+  getLine1Count() {
+    return this.cards.line1.length;
+  }
+
+  getCardCount() {
+    return this.getCards().length;
+  }
 
   isLine1Complete() {
-    return this.cards.line1.length === 5;
+    return this.getLine1Count() === 5;
+  }
+
+  isFull() {
+    return this.getCardCount() === 10;
   }
 
   addCardToLine(lineNumber, card) {
