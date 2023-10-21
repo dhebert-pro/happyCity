@@ -14,3 +14,7 @@ game.removeCardFromLine(2, game.centralZone.getLine(2).visibleCards[1].name);
 
 console.log('Game 3', JSON.parse(JSON.stringify(game)));
 
+game.earnRevenue();
+
+console.log('Game 4', JSON.parse(JSON.stringify(game)));
+

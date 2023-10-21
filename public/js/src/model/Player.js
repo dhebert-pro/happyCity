@@ -10,24 +10,26 @@ export class Player {
 
   getRevenue() {
     const result = 0;
-    this.cards.line1.forEach(card => result += card.revenue);
-    this.cards.line2.forEach(card => result += card.revenue);
+    this.getCards().forEach(card => result += card.revenue);
     return result;
   }
 
   getHapiness() {
     const result = 0;
-    this.cards.line1.forEach(card => result += card.happiness);
-    this.cards.line2.forEach(card => result += card.happiness);
+    this.getCards().forEach(card => result += card.happiness);
     return result;
   }
 
   getPopulation() {
     const result = 0;
-    this.cards.line1.forEach(card => result += card.population);
-    this.cards.line2.forEach(card => result += card.population);
+    this.getCards().forEach(card => result += card.population);
     return result;
   }
+
+  getCards() {
+    return [...this.cards.line1, ...this.cards.line2];
+  }
+
 
   isLine1Complete() {
     return this.cards.line1.length === 5;
@@ -44,6 +46,12 @@ export class Player {
     } else {
       this.addCardToLine(1, card);
     }
+  }
+
+  earnRevenue() {
+    this.getCards().forEach(card => {
+      this.coins += card.revenue;
+    })
   }
 
   computeTotalScore() {

@@ -31,6 +31,12 @@ export class HappyCityGame {
     this.centralZone.addCardToLine(lineNumber);
   }
 
+  earnRevenue() {
+    this.players.forEach(player => {
+      player.earnRevenue();
+    });
+  }
+
   //GET-SET
   getPlayerByIndex(index) {
     return this.players[index];
