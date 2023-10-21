@@ -13,15 +13,27 @@ game.newTurn();
 
 console.log('New Turn', JSON.parse(JSON.stringify(game)));
 
-game.removeCardFromLine(3, game.centralZone.getLine(3).visibleCards[1].name);
+if (game.canRemoveCardFromLine(3, game.centralZone.getLine(3).visibleCards[1].name)) {
+  game.removeCardFromLine(3, game.centralZone.getLine(3).visibleCards[1].name);
+  console.log('Supprimer carte ligne 3', JSON.parse(JSON.stringify(game)));
+}
 
-console.log('Supprimer carte ligne 3', JSON.parse(JSON.stringify(game)));
+if (game.canAddCardToLine(1)) {
+  game.addCardToLine(1);
+  console.log('Ajouter carte ligne 1', JSON.parse(JSON.stringify(game)));
+}
 
-game.addCardToLine(1);
-game.addCardToLine(1);
+if (game.canAddCardToLine(1)) {
+  game.addCardToLine(1);
+  console.log('Ajouter carte ligne 1', JSON.parse(JSON.stringify(game)));
+}
 
-console.log('Ajouter cartes ligne 1', JSON.parse(JSON.stringify(game)));
+if (game.canCurrentPlayerTakeCardFromLine(1, game.centralZone.getLine(1).visibleCards[0].name)) {
+  game.takeCardFromLine(1, game.centralZone.getLine(1).visibleCards[0].name);
+  console.log('Acheter carte ligne 1', JSON.parse(JSON.stringify(game)));
+}
 
-game.takeCardFromLine(1, game.centralZone.getLine(1).visibleCards[0].name);
-
-console.log('Acheter carte ligne 1', JSON.parse(JSON.stringify(game)));
+if (game.canCurrentPlayerTakeSpecialCard(game.specialZone.cards[0].name)) {
+  game.takeSpecialCard(game.specialZone.cards[0].name);
+  console.log('Prendre première carte spéciale', JSON.parse(JSON.stringify(game)));
+}

@@ -22,7 +22,7 @@ export class Deck {
   }
 
   draw() {
-    if (this.isDeckEmpty()) {
+    if (this.isEmpty()) {
       throw new Error(`Deck ${this.level} is empty`);
     }
     const card = this.cards.shift();
@@ -33,7 +33,7 @@ export class Deck {
     return this.cards.length;
   }
 
-  isDeckEmpty() {
+  isEmpty() {
     return this.getCardCount() === 0;
   }
 

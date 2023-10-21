@@ -2,7 +2,7 @@ import { Card } from './Card.js';
 
 export class NormalCard extends Card {
   constructor(name, revenue, happiness, population, color, cost) {
-    super(name, revenue, happiness, population);
+    super(name, revenue, happiness, population, 'Normal');
     this.cost = cost;
     this.color = color;
   }

@@ -5,7 +5,11 @@ export class Player {
     this.cards = {
       line1: [],
       line2: []
-    } // cartes devant le joueur
+    }
+  }
+
+  canBuy(card) {
+    return this.coins >= card.cost;
   }
 
   getRevenue() {
@@ -46,6 +50,37 @@ export class Player {
     return this.getCardCount() === 10;
   }
 
+  hasConditions(conditions) {
+    for (let conditionIndex = 0; conditionIndex < conditions.length; conditionIndex++) {
+      const condition = conditions[conditionIndex];
+      if (!this.hasCondition(condition)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  hasCondition(condition) {
+    const cardCountByConditionColor = this.getCardCountByColor(condition.color);
+    return cardCountByConditionColor >= condition.count;
+  }
+
+  getCardsByColor(color) {
+    return this.getCards().filter(card => card.color === color);
+  }
+
+  getCardsByType(type) {
+    return this.getCards().filter(card => card.type === type);
+  }
+
+  getCardCountByColor(color) {
+    return this.getCardsByColor(color).length;
+  }
+
+  getCardCountByType(type) {
+    return this.getCardsByType(type).length;
+  }
+
   addCardToLine(lineNumber, card) {
     const line = `line${lineNumber}`;
     this.cards[line].push(card);
@@ -60,11 +95,24 @@ export class Player {
   }
 
   buyCard(card) {
-    const cost = card.cost;
-    if (this.coins < cost) {
+    if (!this.canBuy(card)) {
       throw new Error(`Player ${this.name} has not enough coins to buy ${card.name}`);
     }
-    this.removeCoins(cost);
+    this.removeCoins(card.cost);
+    this.addCard(card);
+  }
+
+  addSpecialCard(card) {
+    const conditions = card.conditions;
+    if (this.isFull()) {
+      throw new Error(`Player ${this.name} has no spot to add special card ${card.name}`);
+    }
+    if (!this.hasConditions(conditions)) {
+      throw new Error(`Player ${this.name} has not the requirements to add special card ${card.name}`);
+    }
+    if (this.getCardCountByType('Special') > 0) {
+      throw new Error(`Player ${this.name} can only have one special card`);
+    }
     this.addCard(card);
   }
 

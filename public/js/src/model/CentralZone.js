@@ -18,6 +18,11 @@ export class CentralZone {
     line.draw();
   }
 
+  getCardFromLine(lineNumber, cardName) {
+    const line = this.getLine(lineNumber);
+    return line.getCardByName(cardName);
+  }
+
   removeCardFromLine(lineNumber, cardName) {
     const line = this.getLine(lineNumber);
     const cardRemoved = line.removeVisibleCard(cardName);
@@ -30,6 +35,11 @@ export class CentralZone {
 
   getVisibleCardCount() {
     return this.getLine(1).getVisibleCardCount() + this.getLine(2).getVisibleCardCount() + this.getLine(3).getVisibleCardCount();
+  }
+
+  isLineDeckEmpty(lineNumber) {
+    const line = this.getLine(lineNumber);
+    return line.isDeckEmpty();
   }
 
   isFull() {

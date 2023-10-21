@@ -6,6 +6,11 @@ const removeFirstItemByProperty = (arr, propName, targetName) => {
   return undefined;
 }
 
+const getFirstItemByProperty = (arr, propName, targetName) => {
+  return arr.find(item => item[propName] === targetName);
+}
+
 export {
-  removeFirstItemByProperty
+  removeFirstItemByProperty,
+  getFirstItemByProperty
 }
