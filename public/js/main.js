@@ -17,7 +17,11 @@ game.removeCardFromLine(3, game.centralZone.getLine(3).visibleCards[1].name);
 
 console.log('Supprimer carte ligne 3', JSON.parse(JSON.stringify(game)));
 
-game.addCardToLine(2);
-game.addCardToLine(2);
+game.addCardToLine(1);
+game.addCardToLine(1);
 
-console.log('Ajouter cartes ligne 2', JSON.parse(JSON.stringify(game)));
+console.log('Ajouter cartes ligne 1', JSON.parse(JSON.stringify(game)));
+
+game.takeCardFromLine(1, game.centralZone.getLine(1).visibleCards[0].name);
+
+console.log('Acheter carte ligne 1', JSON.parse(JSON.stringify(game)));

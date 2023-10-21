@@ -59,6 +59,19 @@ export class Player {
     }
   }
 
+  buyCard(card) {
+    const cost = card.cost;
+    if (this.coins < cost) {
+      throw new Error(`Player ${this.name} has not enough coins to buy ${card.name}`);
+    }
+    this.removeCoins(cost);
+    this.addCard(card);
+  }
+
+  removeCoins(coins) {
+    this.coins -= coins;
+  }
+
   earnRevenue() {
     this.getCards().forEach(card => {
       this.coins += card.revenue;

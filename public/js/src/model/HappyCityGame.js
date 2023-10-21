@@ -24,11 +24,17 @@ export class HappyCityGame {
 
   //ACTIONS
   removeCardFromLine(lineNumber, cardName) {
-    this.centralZone.removeCardFromLine(lineNumber, cardName);
+    const cardRemoved = this.centralZone.removeCardFromLine(lineNumber, cardName);
+    return cardRemoved;
   }
 
   addCardToLine(lineNumber) {
     this.centralZone.addCardToLine(lineNumber);
+  }
+
+  takeCardFromLine(lineNumber, cardName) {
+    const cardRemoved = this.removeCardFromLine(lineNumber, cardName);
+    this.players[this.currentPlayerIndex].buyCard(cardRemoved);
   }
 
   newTurn() {
