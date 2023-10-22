@@ -11,6 +11,7 @@ export class HappyCityGame {
     this.playerCount = playerCount;
     this.players = [];
     this.nbTurn = 0;
+    this.isGameFinished = false;
     for(let playerNum = 0; playerNum < playerCount; playerNum++) {
       this.addPlayer(`Joueur ${playerNum + 1}`);
     }
@@ -47,7 +48,7 @@ export class HappyCityGame {
     return  !!card && 
             !this.isCurrentPlayerFull() && 
             this.hasCurrentPlayerConditions(card) &&
-            !this.hasCurrentPlayerCard(cardName);
+            !this.hasCurrentPlayerSpecialCard();
   }
 
   canCurrentPlayerTakeDwellingCard(cardName) {
@@ -108,10 +109,16 @@ export class HappyCityGame {
     }
   }
 
+  skipTurn() {
+    console.log(`${this.getCurrentPlayer().name} skip turn`);
+    this.getCurrentPlayer().skipTurn();
+  }
+
   newTurn() {
     console.log(`New turn : ${this.nbTurn + 1}`);
     this.nbTurn++;
-    if (this.isGameFinished() || this.nbTurn > 20) {
+    if (this.isLastTurn()) {
+      this.isGameFinished = true;
       console.log('Fin du jeu');
     } else {
       this.earnRevenue();
@@ -122,9 +129,9 @@ export class HappyCityGame {
     console.log(`Next player : ${this.currentPlayerIndex === this.playerCount - 1 ? 0 : this.currentPlayerIndex + 1}`);
     if (this.currentPlayerIndex === this.playerCount - 1) {
       this.currentPlayerIndex = 0;
-      nextTurn();
+      this.newTurn();
     } else {
-      this.currentPlayerIndex = 1;
+      this.currentPlayerIndex++;
     }
   }
 
@@ -135,21 +142,25 @@ export class HappyCityGame {
   }
 
   hasCurrentPlayerConditions(card) {
-    return this.getCurrentPlayer().hasConditions(card.conditions);
+    return !!card && this.getCurrentPlayer().hasConditions(card.conditions);
   }
 
   canCurrentPlayerBuy(lineNumber, cardName) {
     const card = this.getCardFromLine(lineNumber, cardName);
-    return this.getCurrentPlayer().canBuy(card);
+    return !!card && this.getCurrentPlayer().canBuy(card);
   }
 
   canCurrentPlayerBuyDwelling(cardName) {
     const card = this.getDwellingCard(cardName);
-    return this.getCurrentPlayer().canBuy(card);
+    return !!card && this.getCurrentPlayer().canBuy(card);
   }
 
   hasCurrentPlayerCard(cardName) {
     return this.getCurrentPlayer().hasCard(cardName);
+  }
+
+  hasCurrentPlayerSpecialCard() {
+    return this.getCurrentPlayer().hasSpecialCard();
   }
 
   isCentralZoneLineDeckEmpty(lineNumber) {
@@ -186,10 +197,10 @@ export class HappyCityGame {
     });
   }
 
-  isGameFinished() {
+  isLastTurn() {
     let result = false;
     this.players.forEach(player => {
-      if (player.isFull()) {
+      if (player.isFull() || this.nbTurn > 20) {
         result = true;
       }
     })

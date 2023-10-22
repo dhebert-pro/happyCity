@@ -121,14 +121,26 @@ export class Player {
     if (!this.hasConditions(conditions)) {
       throw new Error(`Player ${this.name} has not the requirements to add special card ${card.name}`);
     }
-    if (this.getCardCountByType('Special') > 0) {
+    if (this.hasSpecialCard()) {
       throw new Error(`Player ${this.name} can only have one special card`);
     }
     this.addCard(card);
   }
 
+  hasSpecialCard() {
+    return this.getCardCountByType('Special') > 0;
+  }
+
   removeCoins(coins) {
     this.coins -= coins;
+  }
+
+  addCoins(coins) {
+    this.coins += coins;
+  }
+
+  skipTurn() {
+    this.addCoins(1);
   }
 
   earnRevenue() {
@@ -138,6 +150,6 @@ export class Player {
   }
 
   computeTotalScore() {
-    return this.getHapiness() * this.getPopulation();
+    return Math.max(0, this.getHapiness()) * Math.max(0, this.getPopulation());
   }
 }
