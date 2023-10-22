@@ -1,5 +1,5 @@
 export default {
-  "habitations": [
+  "dwelling": [
     {
       "name": "Maison",
       "color": "vert",

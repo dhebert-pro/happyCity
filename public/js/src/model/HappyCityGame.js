@@ -2,6 +2,7 @@ import cardCatalog from '../data/cardCatalog.js';
 import { getRandomNumber, shuffle } from '../util/RandomUtil.js';
 import { NormalCard } from './Card/NormalCard.js';
 import { CentralZone } from './CentralZone.js';
+import { DwellingZone } from './DwellingZone.js';
 import { Player } from './Player.js';
 import { SpecialZone } from './SpecialZone.js';
 
@@ -19,6 +20,7 @@ export class HappyCityGame {
     }
     this.centralZone = new CentralZone();
     this.specialZone = new SpecialZone(playerCount + 2);
+    this.dwellingZone = new DwellingZone(playerCount - 1);
     this.currentPlayerIndex = getRandomNumber(0, playerCount - 1);
   }
 
@@ -34,12 +36,17 @@ export class HappyCityGame {
   }
 
   canCurrentPlayerTakeCardFromLine(lineNumber, cardName) {
-    return this.canRemoveCardFromLine(lineNumber, cardName) && this.canCurrentPlayerBuy(lineNumber, cardName);
+    return this.canRemoveCardFromLine(lineNumber, cardName) && !this.isCurrentPlayerFull() && this.canCurrentPlayerBuy(lineNumber, cardName);
   }
 
   canCurrentPlayerTakeSpecialCard(cardName) {
     const card = this.getSpecialCard(cardName);
     return !!card && !this.isCurrentPlayerFull() && this.hasCurrentPlayerConditions(card);
+  }
+
+  canCurrentPlayerTakeDwellingCard(cardName) {
+    const card = this.getDwellingCard(cardName);
+    return !!card && !this.isCurrentPlayerFull() && this.canCurrentPlayerBuyDwelling(cardName);
   }
 
   // ACTIONS
@@ -67,6 +74,15 @@ export class HappyCityGame {
       this.getCurrentPlayer().buyCard(cardRemoved);
     } else {
       throw new Error(`Current player can't take card ${cardName} from ${lineNumber}`);
+    }
+  }
+
+  takeDwellingCard(cardName) {
+    if (this.canCurrentPlayerTakeDwellingCard(cardName)) {
+      const cardRemoved = this.removeDwellingCard(cardName);
+      this.getCurrentPlayer().buyCard(cardRemoved);
+    } else {
+      throw new Error(`Current player can't take dwelling card ${cardName}`);
     }
   }
 
@@ -103,6 +119,11 @@ export class HappyCityGame {
     return this.getCurrentPlayer().canBuy(card);
   }
 
+  canCurrentPlayerBuyDwelling(cardName) {
+    const card = this.getDwellingCard(cardName);
+    return this.getCurrentPlayer().canBuy(card);
+  }
+
   isCentralZoneLineDeckEmpty(lineNumber) {
     return this.centralZone.isLineDeckEmpty(lineNumber);
   }
@@ -116,8 +137,18 @@ export class HappyCityGame {
     return card;
   }
 
+  getDwellingCard(cardName) {
+    const card = this.dwellingZone.getCardByName(cardName);
+    return card;
+  }
+
   removeSpecialCard(cardName) {
     const cardRemoved = this.specialZone.removeCard(cardName);
+    return cardRemoved;
+  }
+
+  removeDwellingCard(cardName) {
+    const cardRemoved = this.dwellingZone.removeCard(cardName);
     return cardRemoved;
   }
 

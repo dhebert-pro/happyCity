@@ -1,6 +1,7 @@
 import { HappyCityGame } from "./src/model/HappyCityGame.js";
+import { getRandomNumber } from "./src/util/RandomUtil.js";
 
-const game = new HappyCityGame(2);
+const game = new HappyCityGame(4);
 
 console.log('Initialisation', JSON.parse(JSON.stringify(game)));
 
@@ -28,9 +29,16 @@ if (game.canAddCardToLine(1)) {
   console.log('Ajouter carte ligne 1', JSON.parse(JSON.stringify(game)));
 }
 
-if (game.canCurrentPlayerTakeCardFromLine(1, game.centralZone.getLine(1).visibleCards[0].name)) {
-  game.takeCardFromLine(1, game.centralZone.getLine(1).visibleCards[0].name);
-  console.log('Acheter carte ligne 1', JSON.parse(JSON.stringify(game)));
+if (getRandomNumber(0, 1) === 1) {
+  if (game.canCurrentPlayerTakeCardFromLine(1, game.centralZone.getLine(1).visibleCards[0].name)) {
+    game.takeCardFromLine(1, game.centralZone.getLine(1).visibleCards[0].name);
+    console.log('Acheter carte ligne 1', JSON.parse(JSON.stringify(game)));
+  }
+} else {
+  if (game.canCurrentPlayerBuyDwelling(game.dwellingZone.cards[0].name)) {
+    game.takeDwellingCard(game.dwellingZone.cards[0].name);
+    console.log('Acheter carte habitation', JSON.parse(JSON.stringify(game)));
+  }
 }
 
 if (game.canCurrentPlayerTakeSpecialCard(game.specialZone.cards[0].name)) {

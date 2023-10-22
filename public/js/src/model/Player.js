@@ -98,6 +98,9 @@ export class Player {
     if (!this.canBuy(card)) {
       throw new Error(`Player ${this.name} has not enough coins to buy ${card.name}`);
     }
+    if (this.isFull()) {
+      throw new Error(`Player ${this.name} has no spot to add card ${card.name}`);
+    }
     this.removeCoins(card.cost);
     this.addCard(card);
   }
