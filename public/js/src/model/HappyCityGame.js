@@ -36,17 +36,25 @@ export class HappyCityGame {
   }
 
   canCurrentPlayerTakeCardFromLine(lineNumber, cardName) {
-    return this.canRemoveCardFromLine(lineNumber, cardName) && !this.isCurrentPlayerFull() && this.canCurrentPlayerBuy(lineNumber, cardName);
+    return this.canRemoveCardFromLine(lineNumber, cardName) && 
+          !this.isCurrentPlayerFull() && 
+          this.canCurrentPlayerBuy(lineNumber, cardName) &&
+          !this.hasCurrentPlayerCard(cardName);
   }
 
   canCurrentPlayerTakeSpecialCard(cardName) {
     const card = this.getSpecialCard(cardName);
-    return !!card && !this.isCurrentPlayerFull() && this.hasCurrentPlayerConditions(card);
+    return  !!card && 
+            !this.isCurrentPlayerFull() && 
+            this.hasCurrentPlayerConditions(card) &&
+            !this.hasCurrentPlayerCard(cardName);
   }
 
   canCurrentPlayerTakeDwellingCard(cardName) {
     const card = this.getDwellingCard(cardName);
-    return !!card && !this.isCurrentPlayerFull() && this.canCurrentPlayerBuyDwelling(cardName);
+    return  !!card && !this.isCurrentPlayerFull() && 
+            this.canCurrentPlayerBuyDwelling(cardName) &&
+            !this.hasCurrentPlayerCard(cardName);
   }
 
   // ACTIONS
@@ -122,6 +130,10 @@ export class HappyCityGame {
   canCurrentPlayerBuyDwelling(cardName) {
     const card = this.getDwellingCard(cardName);
     return this.getCurrentPlayer().canBuy(card);
+  }
+
+  hasCurrentPlayerCard(cardName) {
+    return this.getCurrentPlayer().hasCard(cardName);
   }
 
   isCentralZoneLineDeckEmpty(lineNumber) {

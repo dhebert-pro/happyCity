@@ -73,12 +73,20 @@ export class Player {
     return this.getCards().filter(card => card.type === type);
   }
 
+  getCardByName(name) {
+    return this.getCards().filter(card => card.name === name);
+  }
+
   getCardCountByColor(color) {
     return this.getCardsByColor(color).length;
   }
 
   getCardCountByType(type) {
     return this.getCardsByType(type).length;
+  }
+
+  hasCard(name) {
+    return this.getCardByName(name).length;
   }
 
   addCardToLine(lineNumber, card) {
