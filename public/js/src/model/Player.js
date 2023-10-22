@@ -5,7 +5,8 @@ export class Player {
     this.cards = {
       line1: [],
       line2: []
-    }
+    },
+    this.hasRemovedCard = false;
   }
 
   canBuy(card) {

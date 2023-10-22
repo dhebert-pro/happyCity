@@ -6,6 +6,7 @@ import { CentralZone } from './CentralZone.js';
 import { DwellingZone } from './DwellingZone.js';
 import { Player } from './Player.js';
 import { SpecialZone } from './SpecialZone.js';
+import ACTIONS from '../enum/actions.js';
 
 export class HappyCityGame {
   constructor(playerCount) {
@@ -30,7 +31,7 @@ export class HappyCityGame {
 
   canRemoveCardFromLine(lineNumber, cardName) {
     const card = this.getCardFromLine(lineNumber, cardName);
-    return !!card;
+    return !!card && !this.hasCurrentPlayerRemovedCard();
   }
 
   canAddCardToLine(lineNumber) {
@@ -67,7 +68,7 @@ export class HappyCityGame {
       const cardRemoved = this.centralZone.removeCardFromLine(lineNumber, cardName);
       return cardRemoved;
     } else {
-      throw new Error(`Card ${cardName} doesn't exist at line ${this.lineNumber}`);
+      throw new Error(`Card ${cardName} can't be removed from line ${this.lineNumber}`);
     }
   }
 
@@ -126,6 +127,7 @@ export class HappyCityGame {
       })
       console.log('Fin du jeu', this);
     } else {
+      this.getCurrentPlayer().hasRemovedCard = false;
       this.earnRevenue();
     }
   }
@@ -144,6 +146,10 @@ export class HappyCityGame {
 
   isCurrentPlayerFull() {
     return this.getCurrentPlayer().isFull();
+  }
+
+  hasCurrentPlayerRemovedCard() {
+    return this.getCurrentPlayer().hasRemovedCard();
   }
 
   hasCurrentPlayerConditions(card) {
@@ -212,8 +218,12 @@ export class HappyCityGame {
     return result;
   }
 
-  getCardFromLine(line, cardName) {
-    return this.centralZone.getCardFromLine(line, cardName);
+  getCardFromLine(lineNumber, cardName) {
+    return this.centralZone.getCardFromLine(lineNumber, cardName);
+  }
+
+  getCardsFromLine(lineNumber) {
+    return this.centralZone.getCardsFromLine(lineNumber);
   }
 
   getRankings() {
@@ -232,8 +242,24 @@ export class HappyCityGame {
     this.players.push(new Player(name));
   }
 
+  //Apprentissage
+
   getState() {
     return this;
   }
+
+  getAvailableActions() {
+    let availableActions = [];
+    for (let lineIndex = 0; lineIndex < 3; lineIndex++) {
+      const cards = this.getCardsFromLine(lineIndex + 1);
+      for (let cardIndex = 0; cardIndex < cards.length; cardIndex++) {
+        const card = cards[cardIndex];
+        if (this.canRemoveCardFromLine(lineIndex + 1, card.name)) {
+          availableActions.push(ACTIONS.REMOVE_CARD_FROM_LINE(lineIndex + 1, card.name));
+        }
+      }
+    }
+  }
+
 
 }

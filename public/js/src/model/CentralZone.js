@@ -23,6 +23,11 @@ export class CentralZone {
     return line.getCardByName(cardName);
   }
 
+  getCardsFromLine(lineNumber) {
+    const line = this.getLine(lineNumber);
+    return line.visibleCards;
+  }
+
   removeCardFromLine(lineNumber, cardName) {
     const line = this.getLine(lineNumber);
     const cardRemoved = line.removeVisibleCard(cardName);
