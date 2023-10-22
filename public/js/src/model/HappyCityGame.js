@@ -38,14 +38,14 @@ export class HappyCityGame {
     return !this.isCentralZoneFull() && !this.isCentralZoneLineDeckEmpty(lineNumber);
   }
 
-  canCurrentPlayerTakeCardFromLine(lineNumber, cardName) {
+  canTakeCardFromLine(lineNumber, cardName) {
     return this.canRemoveCardFromLine(lineNumber, cardName) && 
           !this.isCurrentPlayerFull() && 
           this.canCurrentPlayerBuy(lineNumber, cardName) &&
           !this.hasCurrentPlayerCard(cardName);
   }
 
-  canCurrentPlayerTakeSpecialCard(cardName) {
+  canTakeSpecialCard(cardName) {
     const card = this.getSpecialCard(cardName);
     return  !!card && 
             !this.isCurrentPlayerFull() && 
@@ -53,11 +53,15 @@ export class HappyCityGame {
             !this.hasCurrentPlayerSpecialCard();
   }
 
-  canCurrentPlayerTakeDwellingCard(cardName) {
+  canTakeDwellingCard(cardName) {
     const card = this.getDwellingCard(cardName);
     return  !!card && !this.isCurrentPlayerFull() && 
             this.canCurrentPlayerBuyDwelling(cardName) &&
             !this.hasCurrentPlayerCard(cardName);
+  }
+
+  canSkipTurn() {
+    return true;
   }
 
   // ACTIONS
@@ -83,7 +87,7 @@ export class HappyCityGame {
 
   takeCardFromLine(lineNumber, cardName) {
     console.log(`${this.getCurrentPlayer().name} take card ${cardName} from line ${lineNumber}`);
-    if (this.canCurrentPlayerTakeCardFromLine(lineNumber, cardName)) {
+    if (this.canTakeCardFromLine(lineNumber, cardName)) {
       const cardRemoved = this.removeCardFromLine(lineNumber, cardName);
       this.getCurrentPlayer().buyCard(cardRemoved);
     } else {
@@ -93,7 +97,7 @@ export class HappyCityGame {
 
   takeDwellingCard(cardName) {
     console.log(`${this.getCurrentPlayer().name} take dwelling card ${cardName}`);
-    if (this.canCurrentPlayerTakeDwellingCard(cardName)) {
+    if (this.canTakeDwellingCard(cardName)) {
       const cardRemoved = this.removeDwellingCard(cardName);
       this.getCurrentPlayer().buyCard(cardRemoved);
     } else {
@@ -103,7 +107,7 @@ export class HappyCityGame {
 
   takeSpecialCard(cardName) {
     console.log(`${this.getCurrentPlayer().name} take special card ${cardName}`);
-    if (this.canCurrentPlayerTakeSpecialCard(cardName)) {
+    if (this.canTakeSpecialCard(cardName)) {
       const cardRemoved = this.removeSpecialCard(cardName);
       this.getCurrentPlayer().addSpecialCard(cardRemoved);
     } else {
@@ -113,7 +117,11 @@ export class HappyCityGame {
 
   skipTurn() {
     console.log(`${this.getCurrentPlayer().name} skip turn`);
-    this.getCurrentPlayer().skipTurn();
+    if (history.canSkipTurn()) {
+      this.getCurrentPlayer().skipTurn();
+    } else {
+      throw new Error(`Current player can't skip turn`);
+    }
   }
 
   newTurn() {
@@ -187,9 +195,17 @@ export class HappyCityGame {
     return card;
   }
 
+  getSpecialCards() {
+    return this.specialZone.cards;
+  }
+
   getDwellingCard(cardName) {
     const card = this.dwellingZone.getCardByName(cardName);
     return card;
+  }
+
+  getDwellingCards() {
+    return this.dwellingZone.cards;
   }
 
   removeSpecialCard(cardName) {
@@ -251,13 +267,36 @@ export class HappyCityGame {
   getAvailableActions() {
     let availableActions = [];
     for (let lineIndex = 0; lineIndex < 3; lineIndex++) {
-      const cards = this.getCardsFromLine(lineIndex + 1);
+      const lineNumber = lineIndex + 1;
+      if (this.canAddCardToLine(lineNumber)) {
+        availableActions.push(ACTIONS.ADD_CARD_TO_LINE(lineNumber));
+      }
+      const cards = this.getCardsFromLine(lineNumber);
       for (let cardIndex = 0; cardIndex < cards.length; cardIndex++) {
         const card = cards[cardIndex];
-        if (this.canRemoveCardFromLine(lineIndex + 1, card.name)) {
-          availableActions.push(ACTIONS.REMOVE_CARD_FROM_LINE(lineIndex + 1, card.name));
+        if (this.canRemoveCardFromLine(lineNumber, card.name)) {
+          availableActions.push(ACTIONS.REMOVE_CARD_FROM_LINE(lineNumber, card.name));
+        }
+        if (this.canTakeCardFromLine(lineNumber, card.name)) {
+          availableActions.push(ACTIONS.TAKE_CARD_FROM_LINE(lineNumber, card.name));
         }
       }
+    }
+    for (let cardIndex = 0; cardIndex = this.getDwellingCards(); cardIndex++) {
+      const card = card[cardIndex];
+      if (this.canTakeDwellingCard(card.name)) {
+        availableActions.push(ACTIONS.TAKE_DWELLING_CARD(card.name));
+      }
+    }
+    for (let cardIndex = 0; cardIndex = this.getSpecialCards(); cardIndex++) {
+      const card = card[cardIndex];
+      if (this.canTakeSpecialCard(card.name)) {
+        availableActions.push(ACTIONS.TAKE_SPECIAL_CARD(card.name));
+      }
+    }
+
+    if (this.canSkipTurn()) {
+      availableActions.push(ACTIONS.SKIP_TURN());
     }
   }
 
