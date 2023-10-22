@@ -31,18 +31,32 @@ export class HappyCityGame {
 
   canRemoveCardFromLine(lineNumber, cardName) {
     const card = this.getCardFromLine(lineNumber, cardName);
-    return !!card && !this.hasCurrentPlayerRemovedCard();
+    return  !!card && 
+            !this.hasCurrentPlayerRemovedCard() && 
+            !this.hasCurrentPlayerAddedCard() &&
+            !this.hasCurrentPlayerTakenNormalCard() &&
+            !this.hasCurrentPlayerTakenSpecialCard() &&
+            !this.hasCurrentPlayerSkippedTurn();
   }
 
   canAddCardToLine(lineNumber) {
-    return !this.isCentralZoneFull() && !this.isCentralZoneLineDeckEmpty(lineNumber);
+    return  !this.isCentralZoneFull() && 
+            !this.isCentralZoneLineDeckEmpty(lineNumber) &&
+            !this.hasCurrentPlayerTakenNormalCard() &&
+            !this.hasCurrentPlayerTakenSpecialCard() &&
+            !this.hasCurrentPlayerSkippedTurn();
   }
 
   canTakeCardFromLine(lineNumber, cardName) {
-    return this.canRemoveCardFromLine(lineNumber, cardName) && 
-          !this.isCurrentPlayerFull() && 
-          this.canCurrentPlayerBuy(lineNumber, cardName) &&
-          !this.hasCurrentPlayerCard(cardName);
+    const card = this.getCardFromLine(lineNumber, cardName);
+    return  !!card &&
+            !this.isCurrentPlayerFull() && 
+            this.canCurrentPlayerBuy(lineNumber, cardName) &&
+            !this.hasCurrentPlayerCard(cardName) &&
+            this.isCentralZoneFull() &&
+            !this.hasCurrentPlayerTakenNormalCard() &&
+            !this.hasCurrentPlayerTakenSpecialCard() &&
+            !this.hasCurrentPlayerSkippedTurn();
   }
 
   canTakeSpecialCard(cardName) {
@@ -50,18 +64,34 @@ export class HappyCityGame {
     return  !!card && 
             !this.isCurrentPlayerFull() && 
             this.hasCurrentPlayerConditions(card) &&
-            !this.hasCurrentPlayerSpecialCard();
+            this.isCentralZoneFull() &&
+            !this.hasCurrentPlayerSpecialCard() &&
+            !this.hasCurrentPlayerTakenSpecialCard();
   }
 
   canTakeDwellingCard(cardName) {
     const card = this.getDwellingCard(cardName);
-    return  !!card && !this.isCurrentPlayerFull() && 
+    return  !!card && 
+            !this.isCurrentPlayerFull() && 
             this.canCurrentPlayerBuyDwelling(cardName) &&
-            !this.hasCurrentPlayerCard(cardName);
+            !this.hasCurrentPlayerCard(cardName) &&
+            this.isCentralZoneFull() &&
+            !this.hasCurrentPlayerTakenNormalCard() &&
+            !this.hasCurrentPlayerTakenSpecialCard() &&
+            !this.hasCurrentPlayerSkippedTurn();
   }
 
   canSkipTurn() {
-    return true;
+    return  this.isCentralZoneFull() &&
+            !this.hasCurrentPlayerTakenNormalCard() &&
+            !this.hasCurrentPlayerTakenSpecialCard() &&
+            !this.hasCurrentPlayerSkippedTurn();
+  }
+
+  canEndTurn() {
+    return  this.hasCurrentPlayerTakenNormalCard() ||
+            this.hasCurrentPlayerTakenSpecialCard() ||
+            this.hasCurrentPlayerSkippedTurn();
   }
 
   // ACTIONS
@@ -70,6 +100,7 @@ export class HappyCityGame {
     console.log(`${this.getCurrentPlayer().name} remove card ${cardName} from line ${lineNumber}`);
     if (this.canRemoveCardFromLine(lineNumber, cardName)) {
       const cardRemoved = this.centralZone.removeCardFromLine(lineNumber, cardName);
+      this.getCurrentPlayer().hasRemovedCard = true;
       return cardRemoved;
     } else {
       throw new Error(`Card ${cardName} can't be removed from line ${this.lineNumber}`);
@@ -80,6 +111,7 @@ export class HappyCityGame {
     console.log(`${this.getCurrentPlayer().name} add card to line ${lineNumber}`);
     if (this.canAddCardToLine(lineNumber)) {
       this.centralZone.addCardToLine(lineNumber);
+      this.getCurrentPlayer().hasAddedCard = true;
     } else {
       throw new Error(`Cards can't be added to line ${lineNumber}`);
     }
@@ -88,8 +120,9 @@ export class HappyCityGame {
   takeCardFromLine(lineNumber, cardName) {
     console.log(`${this.getCurrentPlayer().name} take card ${cardName} from line ${lineNumber}`);
     if (this.canTakeCardFromLine(lineNumber, cardName)) {
-      const cardRemoved = this.removeCardFromLine(lineNumber, cardName);
+      const cardRemoved = this.centralZone.removeCardFromLine(lineNumber, cardName);
       this.getCurrentPlayer().buyCard(cardRemoved);
+      this.getCurrentPlayer().hasTakenNormalCard = true;
     } else {
       throw new Error(`Current player can't take card ${cardName} from ${lineNumber}`);
     }
@@ -100,6 +133,7 @@ export class HappyCityGame {
     if (this.canTakeDwellingCard(cardName)) {
       const cardRemoved = this.removeDwellingCard(cardName);
       this.getCurrentPlayer().buyCard(cardRemoved);
+      this.getCurrentPlayer().hasTakenNormalCard = true;
     } else {
       throw new Error(`Current player can't take dwelling card ${cardName}`);
     }
@@ -109,7 +143,8 @@ export class HappyCityGame {
     console.log(`${this.getCurrentPlayer().name} take special card ${cardName}`);
     if (this.canTakeSpecialCard(cardName)) {
       const cardRemoved = this.removeSpecialCard(cardName);
-      this.getCurrentPlayer().addSpecialCard(cardRemoved);
+      this.getCurrentPlayer().addCard(cardRemoved);
+      this.getCurrentPlayer().hasTakenSpecialCard = true;
     } else {
       throw new Error(`Current player can't take special card ${cardName}`);
     }
@@ -117,10 +152,21 @@ export class HappyCityGame {
 
   skipTurn() {
     console.log(`${this.getCurrentPlayer().name} skip turn`);
-    if (history.canSkipTurn()) {
+    if (this.canSkipTurn()) {
       this.getCurrentPlayer().skipTurn();
+      this.getCurrentPlayer().hasSkippedTurn = true;
     } else {
       throw new Error(`Current player can't skip turn`);
+    }
+  }
+
+  endTurn() {
+    console.log(`${this.getCurrentPlayer().name} end turn`);
+    if (this.canEndTurn()) {
+      this.nextPlayer();
+      this.getCurrentPlayer().hasEndedTurn = true;
+    } else {
+      throw new Error(`Current player can't end turn`);
     }
   }
 
@@ -135,13 +181,13 @@ export class HappyCityGame {
       })
       console.log('Fin du jeu', this);
     } else {
-      this.getCurrentPlayer().hasRemovedCard = false;
       this.earnRevenue();
     }
   }
 
   nextPlayer() {
     console.log(`Next player : ${this.currentPlayerIndex === this.playerCount - 1 ? 0 : this.currentPlayerIndex + 1}`);
+    this.getCurrentPlayer().resetTurn();
     if (this.currentPlayerIndex === this.playerCount - 1) {
       this.currentPlayerIndex = 0;
       this.newTurn();
@@ -157,7 +203,23 @@ export class HappyCityGame {
   }
 
   hasCurrentPlayerRemovedCard() {
-    return this.getCurrentPlayer().hasRemovedCard();
+    return this.getCurrentPlayer().hasRemovedCard;
+  }
+
+  hasCurrentPlayerAddedCard() {
+    return this.getCurrentPlayer().hasAddedCard;
+  }
+
+  hasCurrentPlayerTakenNormalCard() {
+    return this.getCurrentPlayer().hasTakenNormalCard;
+  }
+
+  hasCurrentPlayerTakenSpecialCard() {
+    return this.getCurrentPlayer().hasTakenSpecialCard;
+  }
+
+  hasCurrentPlayerSkippedTurn() {
+    return this.getCurrentPlayer().hasSkippedTurn;
   }
 
   hasCurrentPlayerConditions(card) {
@@ -258,6 +320,34 @@ export class HappyCityGame {
     this.players.push(new Player(name));
   }
 
+  do(action) {
+    switch (action.type) {
+      case 'removeCardFromLine' : 
+        this.removeCardFromLine(action.lineNumber, action.cardName);
+        break;
+      case 'addCardToLine': 
+        this.addCardToLine(action.lineNumber);
+        break;
+      case 'takeCardFromLine': 
+        this.takeCardFromLine(action.lineNumber, action.cardName);
+        break;
+      case 'takeDwellingCard': 
+        this.takeDwellingCard(action.cardName);
+        break;
+      case 'takeSpecialCard': 
+        this.takeSpecialCard(action.cardName);
+        break;
+      case 'skipTurn': 
+        this.skipTurn();
+        break;
+      case 'endTurn': 
+        this.endTurn();
+        break;
+      default:
+        throw new Error('No action avalaible');
+    }
+  }
+
   //Apprentissage
 
   getState() {
@@ -282,14 +372,17 @@ export class HappyCityGame {
         }
       }
     }
-    for (let cardIndex = 0; cardIndex = this.getDwellingCards(); cardIndex++) {
-      const card = card[cardIndex];
+    const dwellingCards = this.getDwellingCards();
+    for (let cardIndex = 0; cardIndex < dwellingCards.length; cardIndex++) {
+      const card = dwellingCards[cardIndex];
       if (this.canTakeDwellingCard(card.name)) {
         availableActions.push(ACTIONS.TAKE_DWELLING_CARD(card.name));
       }
     }
-    for (let cardIndex = 0; cardIndex = this.getSpecialCards(); cardIndex++) {
-      const card = card[cardIndex];
+    
+    const specialCards = this.getSpecialCards();
+    for (let cardIndex = 0; cardIndex < specialCards.length; cardIndex++) {
+      const card = specialCards[cardIndex];
       if (this.canTakeSpecialCard(card.name)) {
         availableActions.push(ACTIONS.TAKE_SPECIAL_CARD(card.name));
       }
@@ -298,6 +391,12 @@ export class HappyCityGame {
     if (this.canSkipTurn()) {
       availableActions.push(ACTIONS.SKIP_TURN());
     }
+
+    if (this.canEndTurn()) {
+      availableActions.push(ACTIONS.END_TURN());
+    }
+
+    return availableActions;
   }
 
 

@@ -1,4 +1,7 @@
 const shuffle = (arr) => {
+  if (!arr) {
+    return arr;
+  }
   const shuffled = arr.slice().sort(() => 0.5 - Math.random());
   return shuffled;
 }
@@ -9,8 +12,11 @@ const getRandomElements = (arr, n) => {
 }
 
 const getRandomElement = (arr) => {
+  if (!arr) {
+    return arr;
+  }
   const shuffled = shuffle(arr);
-  return shuffled.slice(0, 1);
+  return shuffled.slice(0, 1)[0];
 }
 
 const getRandomNumber = (min, max) => {

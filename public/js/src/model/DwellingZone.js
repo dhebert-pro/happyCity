@@ -15,9 +15,6 @@ export class DwellingZone {
 
   removeCard(cardName) {
     const cardRemoved = removeFirstItemByProperty(this.cards, 'name', cardName);
-    if (!cardRemoved) {
-      throw new Error(`Dwelling card ${cardName} doesn't exist`);
-    }
     return cardRemoved;
   }
 

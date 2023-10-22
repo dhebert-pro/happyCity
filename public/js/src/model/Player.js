@@ -7,6 +7,10 @@ export class Player {
       line2: []
     },
     this.hasRemovedCard = false;
+    this.hasAddedCard = false;
+    this.hasTakenNormalCard = false;
+    this.hasTakenSpecialCard = false;
+    this.hasSkippedTurn = false;
   }
 
   canBuy(card) {
@@ -104,27 +108,7 @@ export class Player {
   }
 
   buyCard(card) {
-    if (!this.canBuy(card)) {
-      throw new Error(`Player ${this.name} has not enough coins to buy ${card.name}`);
-    }
-    if (this.isFull()) {
-      throw new Error(`Player ${this.name} has no spot to add card ${card.name}`);
-    }
     this.removeCoins(card.cost);
-    this.addCard(card);
-  }
-
-  addSpecialCard(card) {
-    const conditions = card.conditions;
-    if (this.isFull()) {
-      throw new Error(`Player ${this.name} has no spot to add special card ${card.name}`);
-    }
-    if (!this.hasConditions(conditions)) {
-      throw new Error(`Player ${this.name} has not the requirements to add special card ${card.name}`);
-    }
-    if (this.hasSpecialCard()) {
-      throw new Error(`Player ${this.name} can only have one special card`);
-    }
     this.addCard(card);
   }
 
@@ -150,5 +134,13 @@ export class Player {
 
   getTotalScore() {
     return Math.max(0, this.getHapiness()) * Math.max(0, this.getPopulation());
+  }
+
+  resetTurn() {
+    this.hasRemovedCard = false;
+    this.hasAddedCard = false;
+    this.hasTakenNormalCard = false;
+    this.hasTakenSpecialCard = false;
+    this.hasSkippedTurn = false;
   }
 }

@@ -24,9 +24,6 @@ export class Line {
 
   removeVisibleCard(cardName) {
     const cardRemoved = removeFirstItemByProperty(this.visibleCards, 'name', cardName);
-    if (!cardRemoved) {
-      throw new Error(`Card ${cardName} doesn't exist at line ${this.level}`);
-    }
     return cardRemoved;
   }
 
