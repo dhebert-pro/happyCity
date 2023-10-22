@@ -232,4 +232,8 @@ export class HappyCityGame {
     this.players.push(new Player(name));
   }
 
+  getState() {
+    return this;
+  }
+
 }
