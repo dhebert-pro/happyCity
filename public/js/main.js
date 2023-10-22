@@ -29,7 +29,6 @@ while (!game.isGameFinished) {
       game.skipTurn();
     }
   } else {
-    console.log('dwelling', game);
     if (game.canCurrentPlayerTakeDwellingCard(game.dwellingZone.cards[0]?.name)) {
       game.takeDwellingCard(game.dwellingZone.cards[0].name);
     } else {

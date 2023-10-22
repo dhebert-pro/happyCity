@@ -1,4 +1,5 @@
 import cardCatalog from '../data/cardCatalog.js';
+import { sortByMethod } from '../util/ArrayUtil.js';
 import { getRandomNumber, shuffle } from '../util/RandomUtil.js';
 import { NormalCard } from './Card/NormalCard.js';
 import { CentralZone } from './CentralZone.js';
@@ -119,7 +120,11 @@ export class HappyCityGame {
     this.nbTurn++;
     if (this.isLastTurn()) {
       this.isGameFinished = true;
-      console.log('Fin du jeu');
+      const rankings = this.getRankings();
+      rankings.forEach(ranking => {
+        console.log('- ', ranking.name, ranking.getTotalScore());
+      })
+      console.log('Fin du jeu', this);
     } else {
       this.earnRevenue();
     }
@@ -211,7 +216,10 @@ export class HappyCityGame {
     return this.centralZone.getCardFromLine(line, cardName);
   }
 
-  //GET-SET
+  getRankings() {
+    return sortByMethod(this.players, 'getTotalScore');
+  }
+
   getCurrentPlayer() {
     return this.players[this.currentPlayerIndex];
   }

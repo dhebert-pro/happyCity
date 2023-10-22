@@ -13,19 +13,19 @@ export class Player {
   }
 
   getRevenue() {
-    const result = 0;
+    let result = 0;
     this.getCards().forEach(card => result += card.revenue);
     return result;
   }
 
   getHapiness() {
-    const result = 0;
+    let result = 0;
     this.getCards().forEach(card => result += card.happiness);
     return result;
   }
 
   getPopulation() {
-    const result = 0;
+    let result = 0;
     this.getCards().forEach(card => result += card.population);
     return result;
   }
@@ -144,12 +144,10 @@ export class Player {
   }
 
   earnRevenue() {
-    this.getCards().forEach(card => {
-      this.coins += card.revenue;
-    })
+    this.coins += this.getRevenue();
   }
 
-  computeTotalScore() {
+  getTotalScore() {
     return Math.max(0, this.getHapiness()) * Math.max(0, this.getPopulation());
   }
 }
