@@ -60,6 +60,7 @@ export class HappyCityGame {
   // ACTIONS
 
   removeCardFromLine(lineNumber, cardName) {
+    console.log(`${this.getCurrentPlayer().name} remove card ${cardName} from line ${lineNumber}`);
     if (this.canRemoveCardFromLine(lineNumber, cardName)) {
       const cardRemoved = this.centralZone.removeCardFromLine(lineNumber, cardName);
       return cardRemoved;
@@ -69,6 +70,7 @@ export class HappyCityGame {
   }
 
   addCardToLine(lineNumber) {
+    console.log(`${this.getCurrentPlayer().name} add card to line ${lineNumber}`);
     if (this.canAddCardToLine(lineNumber)) {
       this.centralZone.addCardToLine(lineNumber);
     } else {
@@ -77,6 +79,7 @@ export class HappyCityGame {
   }
 
   takeCardFromLine(lineNumber, cardName) {
+    console.log(`${this.getCurrentPlayer().name} take card ${cardName} from line ${lineNumber}`);
     if (this.canCurrentPlayerTakeCardFromLine(lineNumber, cardName)) {
       const cardRemoved = this.removeCardFromLine(lineNumber, cardName);
       this.getCurrentPlayer().buyCard(cardRemoved);
@@ -86,6 +89,7 @@ export class HappyCityGame {
   }
 
   takeDwellingCard(cardName) {
+    console.log(`${this.getCurrentPlayer().name} take dwelling card ${cardName}`);
     if (this.canCurrentPlayerTakeDwellingCard(cardName)) {
       const cardRemoved = this.removeDwellingCard(cardName);
       this.getCurrentPlayer().buyCard(cardRemoved);
@@ -95,6 +99,7 @@ export class HappyCityGame {
   }
 
   takeSpecialCard(cardName) {
+    console.log(`${this.getCurrentPlayer().name} take special card ${cardName}`);
     if (this.canCurrentPlayerTakeSpecialCard(cardName)) {
       const cardRemoved = this.removeSpecialCard(cardName);
       this.getCurrentPlayer().addSpecialCard(cardRemoved);
@@ -104,11 +109,22 @@ export class HappyCityGame {
   }
 
   newTurn() {
+    console.log(`New turn : ${this.nbTurn + 1}`);
     this.nbTurn++;
     if (this.isGameFinished() || this.nbTurn > 20) {
       console.log('Fin du jeu');
     } else {
       this.earnRevenue();
+    }
+  }
+
+  nextPlayer() {
+    console.log(`Next player : ${this.currentPlayerIndex === this.playerCount - 1 ? 0 : this.currentPlayerIndex + 1}`);
+    if (this.currentPlayerIndex === this.playerCount - 1) {
+      this.currentPlayerIndex = 0;
+      nextTurn();
+    } else {
+      this.currentPlayerIndex = 1;
     }
   }
 
