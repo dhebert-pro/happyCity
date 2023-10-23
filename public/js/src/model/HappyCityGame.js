@@ -312,6 +312,10 @@ export class HappyCityGame {
     return this.players[this.currentPlayerIndex];
   }
 
+  getCurrentPlayerScore() {
+    return this.getCurrentPlayer().getTotalScore();
+  }
+
   getPlayerByIndex(index) {
     return this.players[index];
   }
