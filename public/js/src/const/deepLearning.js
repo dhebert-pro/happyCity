@@ -5,5 +5,5 @@ export default {
   epsilonDecay: 0.995, //Taux de réduction d'epsilon
   epsilonMin: 0.01, //Epsilon minimum
   batchSize: 64, //Echantillonnage de la mémoire de replay
-  replayMemory: 10000 //Taille de la mémoire de replay
+  replayMemorySize: 10000 //Taille de la mémoire de replay
 }

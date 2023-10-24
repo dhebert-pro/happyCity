@@ -1,7 +1,9 @@
 import { ACTIONS } from "./src/enum/actions.js";
 import { HappyCityGame } from "./src/model/HappyCityGame.js";
-import { createQNetwork } from "./src/network/qNetwork.js";
+import { createQNetwork, selectEpsilonGreedyAction } from "./src/network/qNetwork.js";
 import { getRandomElement } from "./src/util/RandomUtil.js";
+import deepLearning from './src/const/deepLearning.js';
+import { ReplayMemory } from "./src/model/ReplayMemory.js";
 
 const debug = false;
 
@@ -21,9 +23,11 @@ if (debug) {
   }
 
 } else {
-  const stateSize = 630;  // taille de votre état
+  const stateSize = 630;  // taille de l'état
   const numActions = ACTIONS.length;  // Nombres d'actions possibles
 
   const qNetwork = createQNetwork(stateSize, numActions);
-  qNetwork.summary();
+  
+  const replayMemory = new ReplayMemory(deepLearning.replayMemorySize);
+
 }
