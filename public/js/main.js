@@ -1,15 +1,29 @@
+import { ACTIONS } from "./src/enum/actions.js";
 import { HappyCityGame } from "./src/model/HappyCityGame.js";
-import { getRandomElement, getRandomNumber } from "./src/util/RandomUtil.js";
+import { createQNetwork } from "./src/network/qNetwork.js";
+import { getRandomElement } from "./src/util/RandomUtil.js";
 
-const game = new HappyCityGame(4);
+const debug = false;
 
-game.newTurn();
 
-while (!game.isGameFinished) {
+if (debug) {
+  const game = new HappyCityGame(4);
 
-  const availableActions = game.getAvailableActions();
-  const action = getRandomElement(availableActions);
+  game.newTurn();
 
-  game.do(action);
+  while (!game.isGameFinished) {
 
+    const availableActions = game.getAvailableActions();
+    const action = getRandomElement(availableActions);
+
+    game.do(action);
+
+  }
+
+} else {
+  const stateSize = 630;  // taille de votre état
+  const numActions = ACTIONS.length;  // Nombres d'actions possibles
+
+  const qNetwork = createQNetwork(stateSize, numActions);
+  qNetwork.summary();
 }

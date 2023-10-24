@@ -14,9 +14,17 @@ export class CentralZone {
     line.draw();
   }
 
-  getCardFromLine(lineNumber, cardName) {
+  getCardFromLine(lineNumber, position) {
     const line = this.getLine(lineNumber);
-    return line.getCardByName(cardName);
+    return line.getCardByPosition(position);
+  }
+
+  getCards() {
+    return [
+      ...this.getLine(1).visibleCards,
+      ...this.getLine(2).visibleCards,
+      ...this.getLine(3).visibleCards
+    ];
   }
 
   getCardsFromLine(lineNumber) {
@@ -24,9 +32,9 @@ export class CentralZone {
     return line.visibleCards;
   }
 
-  removeCardFromLine(lineNumber, cardName) {
+  removeCardFromLine(lineNumber, position) {
     const line = this.getLine(lineNumber);
-    const cardRemoved = line.removeVisibleCard(cardName);
+    const cardRemoved = line.removeVisibleCard(position);
     return cardRemoved;
   }
 

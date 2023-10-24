@@ -1,3 +1,4 @@
+import cardCatalog from '../../data/cardCatalog.js';
 import { Card } from './Card.js';
 
 export class SpecialCard extends Card {
@@ -8,6 +9,10 @@ export class SpecialCard extends Card {
 
   static getFromList = (card) => {
     return new SpecialCard(card.name, card.revenue, card.happiness, card.population, card.conditions);
+  }
+
+  static getCardList = () => {
+    return cardCatalog.special.map(card => card.name);
   }
 
 }

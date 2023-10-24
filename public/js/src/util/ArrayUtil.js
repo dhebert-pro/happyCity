@@ -26,9 +26,19 @@ function sortByMethod(array, methodName) {
   return result;
 }
 
+function countOccurrences(arr, target) {
+  return arr.filter(item => item === target).length;
+}
+
+function removeAt(array, index) {
+  return array.splice(index, 1)[0];
+}
+
 export {
   removeFirstItemByProperty,
   getFirstItemByProperty,
   sortByProperty,
-  sortByMethod
+  sortByMethod,
+  countOccurrences,
+  removeAt
 }

@@ -27,7 +27,7 @@ export default {
   ],
   "start": [
     {
-      "name": "Happy Market",
+      "name": "Happy Market 1",
       "color": "jaune",
       "cost": 0,
       "revenue": 1,
@@ -35,7 +35,7 @@ export default {
       "happiness": 0
     },
     {
-      "name": "Happy Market",
+      "name": "Happy Market 2",
       "color": "orange",
       "cost": 0,
       "revenue": 1,
@@ -43,7 +43,7 @@ export default {
       "happiness": 0
     },
     {
-      "name": "Happy Market",
+      "name": "Happy Market 3",
       "color": "violet",
       "cost": 0,
       "revenue": 1,
@@ -51,7 +51,7 @@ export default {
       "happiness": 0
     },
     {
-      "name": "Happy Market",
+      "name": "Happy Market 4",
       "color": "vert",
       "cost": 0,
       "revenue": 1,
@@ -59,7 +59,7 @@ export default {
       "happiness": 0
     },
     {
-      "name": "Happy Market",
+      "name": "Happy Market 5",
       "color": "bleu",
       "cost": 0,
       "revenue": 1,

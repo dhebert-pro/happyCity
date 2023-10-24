@@ -1,5 +1,5 @@
 import cardCatalog from "../data/cardCatalog.js";
-import { getFirstItemByProperty, removeFirstItemByProperty } from "../util/ArrayUtil.js";
+import { getFirstItemByProperty, removeAt } from "../util/ArrayUtil.js";
 import { DwellingCard } from "./Card/DwellingCard.js";
 
 export class DwellingZone {
@@ -13,13 +13,18 @@ export class DwellingZone {
     });
   }
 
-  removeCard(cardName) {
-    const cardRemoved = removeFirstItemByProperty(this.cards, 'name', cardName);
+  removeCard(position) {
+    const cardRemoved = removeAt(this.cards, position);
     return cardRemoved;
   }
 
   getCardByName(cardName) {
     const card = getFirstItemByProperty(this.cards, 'name', cardName);
+    return card;
+  }
+
+  getCardByPosition(position) {
+    const card = this.cards[position];
     return card;
   }
 

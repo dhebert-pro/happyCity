@@ -1,4 +1,4 @@
-import { getFirstItemByProperty, removeFirstItemByProperty } from "../util/ArrayUtil.js";
+import { getFirstItemByProperty, removeAt } from "../util/ArrayUtil.js";
 import { Deck } from "./Deck.js";
 
 export class Line {
@@ -18,12 +18,17 @@ export class Line {
     return card;
   }
 
+  getCardByPosition(position) {
+    const card = this.visibleCards[position];
+    return card;
+  }
+
   isDeckEmpty() {
     return this.deck.isEmpty();
   }
 
-  removeVisibleCard(cardName) {
-    const cardRemoved = removeFirstItemByProperty(this.visibleCards, 'name', cardName);
+  removeVisibleCard(position) {
+    const cardRemoved = removeAt(this.visibleCards, position);
     return cardRemoved;
   }
 

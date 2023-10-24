@@ -1,9 +1,79 @@
-export default {
-  REMOVE_CARD_FROM_LINE: (lineNumber, cardName) => ({ type: 'removeCardFromLine', lineNumber, cardName }), 
-  ADD_CARD_TO_LINE: (lineNumber) => ({ type: 'addCardToLine', lineNumber }), 
-  TAKE_CARD_FROM_LINE: (lineNumber, cardName) => ({ type: 'takeCardFromLine', lineNumber, cardName }), 
-  TAKE_DWELLING_CARD: (cardName) => ({ type: 'takeDwellingCard', cardName }), 
-  TAKE_SPECIAL_CARD: (cardName) => ({ type: 'takeSpecialCard', cardName }), 
-  SKIP_TURN: () => ({ type: 'skipTurn' }),
-  END_TURN: () => ({ type: 'endTurn' })
+const ACTIONS = [
+  { type: 'removeCardFromLine', lineNumber: 1, position: 1 },
+  { type: 'removeCardFromLine', lineNumber: 1, position: 2 },
+  { type: 'removeCardFromLine', lineNumber: 1, position: 3 },
+  { type: 'removeCardFromLine', lineNumber: 2, position: 1 },
+  { type: 'removeCardFromLine', lineNumber: 2, position: 2 },
+  { type: 'removeCardFromLine', lineNumber: 2, position: 3 },
+  { type: 'removeCardFromLine', lineNumber: 3, position: 1 },
+  { type: 'removeCardFromLine', lineNumber: 3, position: 2 },
+  { type: 'removeCardFromLine', lineNumber: 3, position: 3 },
+  { type: 'addCardToLine', lineNumber: 1 },
+  { type: 'addCardToLine', lineNumber: 2 },
+  { type: 'addCardToLine', lineNumber: 3 },
+  { type: 'takeCardFromLine', lineNumber: 1, position: 1 },
+  { type: 'takeCardFromLine', lineNumber: 1, position: 2 },
+  { type: 'takeCardFromLine', lineNumber: 1, position: 3 },
+  { type: 'takeCardFromLine', lineNumber: 2, position: 1 },
+  { type: 'takeCardFromLine', lineNumber: 2, position: 2 },
+  { type: 'takeCardFromLine', lineNumber: 2, position: 3 },
+  { type: 'takeCardFromLine', lineNumber: 3, position: 1 },
+  { type: 'takeCardFromLine', lineNumber: 3, position: 2 },
+  { type: 'takeCardFromLine', lineNumber: 3, position: 3 },
+  { type: 'takeDwellingCard', position: 1 },
+  { type: 'takeDwellingCard', position: 2 },
+  { type: 'takeDwellingCard', position: 3 },
+  { type: 'takeSpecialCard', position: 1 },
+  { type: 'takeSpecialCard', position: 2 },
+  { type: 'takeSpecialCard', position: 3 },
+  { type: 'takeSpecialCard', position: 4 },
+  { type: 'takeSpecialCard', position: 5 },
+  { type: 'takeSpecialCard', position: 6 },
+  { type: 'takeSpecialCard', position: 7 },
+  { type: 'skipTurn' },
+  { type: 'endTurn' }
+];
+
+const getActionIndex = (id) => {
+  const ids = {
+    'REMOVE_CARD_FROM_LINE_1_POSITION_1': 0,
+    'REMOVE_CARD_FROM_LINE_1_POSITION_2': 1,
+    'REMOVE_CARD_FROM_LINE_1_POSITION_3': 2,
+    'REMOVE_CARD_FROM_LINE_2_POSITION_1': 3,
+    'REMOVE_CARD_FROM_LINE_2_POSITION_2': 4,
+    'REMOVE_CARD_FROM_LINE_2_POSITION_3': 5,
+    'REMOVE_CARD_FROM_LINE_3_POSITION_1': 6,
+    'REMOVE_CARD_FROM_LINE_3_POSITION_2': 7,
+    'REMOVE_CARD_FROM_LINE_3_POSITION_3': 8,
+    'ADD_CARD_TO_LINE_1': 9,
+    'ADD_CARD_TO_LINE_2': 10,
+    'ADD_CARD_TO_LINE_3': 11,
+    'TAKE_CARD_FROM_LINE_1_POSITION_1': 12,
+    'TAKE_CARD_FROM_LINE_1_POSITION_2': 13,
+    'TAKE_CARD_FROM_LINE_1_POSITION_3': 14,
+    'TAKE_CARD_FROM_LINE_2_POSITION_1': 15,
+    'TAKE_CARD_FROM_LINE_2_POSITION_2': 16,
+    'TAKE_CARD_FROM_LINE_2_POSITION_3': 17,
+    'TAKE_CARD_FROM_LINE_3_POSITION_1': 18,
+    'TAKE_CARD_FROM_LINE_3_POSITION_2': 19,
+    'TAKE_CARD_FROM_LINE_3_POSITION_3': 20,
+    'TAKE_DWELLING_CARD_1': 21,
+    'TAKE_DWELLING_CARD_2': 22,
+    'TAKE_DWELLING_CARD_3': 23,
+    'TAKE_SPECIAL_CARD_1': 24,
+    'TAKE_SPECIAL_CARD_2': 25,
+    'TAKE_SPECIAL_CARD_3': 26,
+    'TAKE_SPECIAL_CARD_4': 27,
+    'TAKE_SPECIAL_CARD_5': 28,
+    'TAKE_SPECIAL_CARD_6': 29,
+    'TAKE_SPECIAL_CARD_7': 30,
+    'SKIP_TURN': 31,
+    'END_TURN': 32
+  };
+  return ids[id];
 }
+
+export {
+  ACTIONS,
+  getActionIndex
+};

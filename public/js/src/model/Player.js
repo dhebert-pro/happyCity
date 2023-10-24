@@ -90,6 +90,10 @@ export class Player {
     return this.getCardsByType(type).length;
   }
 
+  getCardByPosition(position) {
+    return this.getCards()[position];
+  }
+
   hasCard(name) {
     return this.getCardByName(name).length;
   }
